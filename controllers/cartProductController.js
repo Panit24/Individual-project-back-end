@@ -1,6 +1,7 @@
 const { CartProduct, sequelize, Product } = require("../models");
 const createError = require("../utils/createError");
 exports.addCartProduct = async (req, res, next) => {
+  const t = await sequelize.transaction();
   try {
     const { amount, productId } = req.body;
     if (!amount) {
@@ -9,13 +10,22 @@ exports.addCartProduct = async (req, res, next) => {
     if (!productId) {
       createError("Product id is required", 400);
     }
-    const cartProduct = await CartProduct.create({
-      amount: amount,
-      productId: productId,
-      userId: req.user.id,
-    });
+    const product = await Product.findOne({ where: { id: productId } });
+    if (amount > product.stock) {
+      createError("สินค้ามีไม่เพียงพอ", 400);
+    }
+    const cartProduct = await CartProduct.create(
+      {
+        amount: amount,
+        productId: productId,
+        userId: req.user.id,
+      },
+      { transaction: t }
+    );
+    await t.commit();
     res.json({ cartProduct: cartProduct });
   } catch (err) {
+    await t.rollback();
     next(err);
   }
 };

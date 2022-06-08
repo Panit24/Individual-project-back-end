@@ -27,7 +27,10 @@ module.exports = (sequelize, DataTypes) => {
       },
       description: { type: DataTypes.TEXT },
       unitPrice: { type: DataTypes.DECIMAL(2, 10), allowNull: false },
-      stock: { type: DataTypes.FLOAT, allowNull: false },
+      stock: {
+        type: DataTypes.FLOAT.UNSIGNED,
+        allowNull: false,
+      },
       unitWeightKg: { type: DataTypes.FLOAT, allowNull: false },
       image: { type: DataTypes.STRING, unique: true },
     },

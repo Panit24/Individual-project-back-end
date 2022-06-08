@@ -17,7 +17,7 @@ module.exports = (sequelize, DataTypes) => {
           notEmpty: true,
         },
       },
-      unitWeight: {
+      unitWeightKg: {
         type: DataTypes.FLOAT,
         allowNull: false,
         validate: {

@@ -9,7 +9,7 @@ const productRouter = require("./routes/productRoute");
 
 const adminAuthRouter = require("./routes/adminAuthRoute");
 const cartProductRouter = require("./routes/cartProductRoute");
-// const saleOrderRouter = require("./routes/saleOrderRoute");
+const saleOrderRouter = require("./routes/saleOrderRoute");
 
 const notFoundMiddleware = require("./middleware/notFound");
 const errorMiddleware = require("./middleware/error");
@@ -30,8 +30,8 @@ app.use("/users", authenticate, userRouter);
 app.use("/admin_products", authenticateAdmin, productAdminRouter);
 app.use("/products", productRouter);
 app.use("/cart_products", authenticate, cartProductRouter);
+app.use("/sale_orders", authenticate, saleOrderRouter);
 
-// app.use("/saleOrders", authenticate, saleOrderRouter);
 app.use(notFoundMiddleware);
 app.use(errorMiddleware);
 

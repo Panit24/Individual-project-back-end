@@ -4,37 +4,90 @@ const createError = require("../utils/createError");
 const { Product, sequelize, Category } = require("../models");
 
 exports.addProduct = async (req, res, next) => {
+  const t = await sequelize.transaction();
   try {
-    const {
-      name,
-      unitPrice,
-      productCode,
-      stock,
-      unitWeightKg,
-      productCategory,
-      categoryId,
-    } = req.body;
-    if (!req.file && !name) {
-      createError(" Image or product name is required", 400);
-    }
-    let image;
-    if (req.file) {
-      const result = await cloudinary.upload(req.file.path);
-      image = result.secure_url;
-    }
-    const product = await Product.create({
-      name,
-      image,
-      unitPrice,
-      productCode,
-      stock,
-      unitWeightKg,
-      productCategory,
-      categoryId,
+    //Function purchase updateStock by productId
+    const { productCode, amount } = req.body;
+    const existingProduct = await Product.findOne({
+      where: { productCode: productCode },
+      attributes: {
+        exclude: [
+          "createdAt",
+          "updatedAt",
+          "description",
+          "categoryId",
+          "supplierId",
+          "unitWeightKg",
+          "image",
+        ],
+      },
     });
 
-    res.json({ product: product });
+    // console.log(existingProduct);
+
+    if (existingProduct) {
+      existingProduct.stock = existingProduct.stock + +amount;
+      await existingProduct.save({ transaction: t });
+      await t.commit();
+      res.json({ existingProduct: existingProduct });
+    } else {
+      const {
+        name,
+        unitPrice,
+        productCode,
+        stock,
+        unitWeightKg,
+        productCategory,
+        categoryId,
+        description,
+      } = req.body;
+      if (!req.file && !name) {
+        createError(" Image or product name is required", 400);
+      }
+      let image;
+      if (req.file) {
+        const result = await cloudinary.upload(req.file.path);
+        image = result.secure_url;
+        const product = await Product.create({
+          name,
+          image,
+          unitPrice,
+          productCode,
+          stock,
+          unitWeightKg,
+          productCategory,
+          categoryId,
+          description,
+        });
+      }
+      const product = await Product.create(
+        {
+          name,
+          image,
+          unitPrice,
+          productCode,
+          stock,
+          unitWeightKg,
+          productCategory,
+          categoryId,
+        },
+        { transaction: t }
+      );
+      await t.commit();
+      res.json({ product: product });
+    }
+    //------------------
+    // const promise = saleOrderProducts.map(async (el) => {
+    //   const product = await Product.findOne({ where: { id: el.productId } });
+    // console.log(product);
+    // console.log(el);
+    //   product.stock = product.stock - el.amount;
+    //   await product.save({ transaction: t });
+    // });
+    // await Promise.all(promise);
+    //------------------
   } catch (err) {
+    await t.rollback();
     next(err);
   } finally {
     if (req.file) {

@@ -112,13 +112,11 @@ exports.createSaleOrderAndSaleOrderProducts = async (req, res, next) => {
         product.stock = product.stock - el.amount;
         await product.save({ transaction: t });
       });
-
       await Promise.all(promise);
       //await = รอ
       //resolve reject
       //เปิด connection 3 ตัว
       //Promise.all(promise) = ให้ promise objects ทุกตัวทำงานเสร็จก่อนแล้วค่อย commit
-
       //---------------------------
       // res.json({ saleOrder: saleOrder });
       await t.commit();
@@ -126,7 +124,6 @@ exports.createSaleOrderAndSaleOrderProducts = async (req, res, next) => {
     }
   } catch (err) {
     await t.rollback();
-    console.log("test");
     next(err);
   }
 };

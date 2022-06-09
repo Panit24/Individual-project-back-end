@@ -31,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.FLOAT.UNSIGNED,
         allowNull: false,
       },
-      unitWeightKg: { type: DataTypes.FLOAT, allowNull: false },
+      unitWeightKg: { type: DataTypes.FLOAT, allowNull: true },
       image: { type: DataTypes.STRING, unique: true },
     },
     {

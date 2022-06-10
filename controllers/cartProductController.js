@@ -14,16 +14,26 @@ exports.addCartProduct = async (req, res, next) => {
     if (amount > product.stock) {
       createError("สินค้ามีไม่เพียงพอ", 400);
     }
-    const cartProduct = await CartProduct.create(
-      {
-        amount: amount,
-        productId: productId,
-        userId: req.user.id,
-      },
-      { transaction: t }
-    );
-    await t.commit();
-    res.json({ cartProduct: cartProduct });
+    const cartProduct = await CartProduct.findOne({
+      where: { productId: productId },
+    });
+    if (cartProduct) {
+      cartProduct.amount = cartProduct.amount + +amount;
+      await cartProduct.save({ transaction: t });
+      await t.commit();
+      res.json({ message: "เพิ่มสินค้าในตระกร้าสำเร็จ" });
+    } else {
+      const newCartProduct = await CartProduct.create(
+        {
+          amount: amount,
+          productId: productId,
+          userId: req.user.id,
+        },
+        { transaction: t }
+      );
+      await t.commit();
+      res.json({ newCartProduct: newCartProduct });
+    }
   } catch (err) {
     await t.rollback();
     next(err);
@@ -106,6 +116,21 @@ exports.getCartProductById = async (req, res, next) => {
 exports.getCartProductByUserId = async (req, res, next) => {
   try {
     const cartProducts = await CartProduct.findAll({
+      include: [
+        {
+          model: Product,
+          attributes: {
+            exclude: [
+              "createdAt",
+              "updatedAt",
+              "description",
+              "stock",
+              "categoryId",
+              "supplierId",
+            ],
+          },
+        },
+      ],
       where: { userId: req.user.id },
       attributes: { exclude: ["createdAt", "updatedAt", "id"] },
     });

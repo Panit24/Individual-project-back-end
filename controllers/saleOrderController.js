@@ -14,7 +14,17 @@ exports.createSaleOrderAndSaleOrderProducts = async (req, res, next) => {
   const t = await sequelize.transaction();
 
   try {
-    const { paymentType } = req.body;
+    const {
+      deliveryType,
+      recipientName,
+      recipientPhoneNumber,
+      deliveryAddress,
+      deliveryDistrict,
+      deliveryCity,
+      deliveryPostCode,
+      paymentType,
+      image,
+    } = req.body;
     if (!paymentType) {
       createError("โปรดกรุณาเลือกวิธีการชำระ", 400);
     }
@@ -75,6 +85,13 @@ exports.createSaleOrderAndSaleOrderProducts = async (req, res, next) => {
 
       const saleOrder = await SaleOrder.create(
         {
+          deliveryType: deliveryType,
+          recipientName: recipientName,
+          recipientPhoneNumber: recipientPhoneNumber,
+          deliveryAddress: deliveryAddress,
+          deliveryDistrict: deliveryDistrict,
+          deliveryCity: deliveryCity,
+          deliveryPostCode: deliveryPostCode,
           paymentType: paymentType,
           userId: req.user.id,
           slip: slip,

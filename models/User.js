@@ -19,7 +19,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       taxId: {
         type: DataTypes.STRING,
-        allowNull: false,
         unique: true,
       },
       phoneNumber: {

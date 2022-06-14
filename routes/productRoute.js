@@ -7,5 +7,9 @@ router.get(
   "/getAllProductByCategoryName/:categoryName",
   productController.getAllProductByCategoryName
 );
+router.get(
+  "/getAllProductBySearchTerm/:searchTerm",
+  productController.getAllProductBySearchTerm
+);
 
 module.exports = router;

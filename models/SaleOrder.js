@@ -12,6 +12,42 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.STRING,
         defaultValue: "transfer",
       },
+      deliveryType: {
+        type: DataTypes.STRING,
+      },
+      recipientName: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      recipientPhoneNumber: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      deliveryAddress: {
+        type: DataTypes.TEXT,
+      },
+      deliveryDistrict: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      deliveryCity: {
+        type: DataTypes.STRING,
+        validate: {
+          notEmpty: true,
+        },
+      },
+      deliveryPostCode: {
+        type: DataTypes.STRING,
+      },
+      deliveryLocation: {
+        type: DataTypes.STRING,
+      },
     },
     {
       underscored: true,

@@ -32,7 +32,7 @@ exports.getAllProductByCategoryName = async (req, res, next) => {
       },
       order: [["unitPrice", "ASC"]],
     });
-    if (!products[0]) {
+    if (products.length === 0) {
       createError("product not found", 400);
     }
     res.json({ products: products });
@@ -60,7 +60,7 @@ exports.getAllProductBySearchTerm = async (req, res, next) => {
       order: [["unitPrice", "ASC"]],
       where: { name: { [Op.like]: `%${searchTerm}%` } },
     });
-    if (!products[0]) {
+    if (products.length === 0) {
       createError("product not found", 400);
     }
     res.json({ products: products });

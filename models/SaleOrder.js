@@ -48,6 +48,14 @@ module.exports = (sequelize, DataTypes) => {
       deliveryLocation: {
         type: DataTypes.STRING,
       },
+      deliveryStatus: {
+        type: DataTypes.ENUM(
+          "กำลังดำเนินการ",
+          "พร้อมส่ง",
+          "กำลังส่ง",
+          "ส่งเสร็จสิ้น"
+        ),
+      },
     },
     {
       underscored: true,

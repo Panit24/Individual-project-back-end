@@ -7,4 +7,6 @@ router.post(
   upload.single("slip"),
   saleOrderController.createSaleOrderAndSaleOrderProducts
 );
+router.get("/getSaleOrderByUserId", saleOrderController.getSaleOrderByUserId);
+
 module.exports = router;

@@ -43,6 +43,10 @@ exports.getAllProductByCategoryName = async (req, res, next) => {
 exports.getAllProductBySearchTerm = async (req, res, next) => {
   try {
     const { searchTerm } = req.params;
+    let newSearchTerm = searchTerm.trim().replace(/\s/g, "");
+    console.log({ searchTerm: searchTerm });
+    console.log({ newSearchTerm: newSearchTerm });
+
     const products = await Product.findAll({
       attributes: {
         exclude: [
@@ -58,7 +62,7 @@ exports.getAllProductBySearchTerm = async (req, res, next) => {
         ],
       },
       order: [["unitPrice", "ASC"]],
-      where: { name: { [Op.like]: `%${searchTerm}%` } },
+      where: { name: { [Op.like]: `%${newSearchTerm}%` } },
     });
     if (products.length === 0) {
       createError("product not found", 400);

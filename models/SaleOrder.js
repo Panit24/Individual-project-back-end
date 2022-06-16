@@ -11,18 +11,28 @@ module.exports = (sequelize, DataTypes) => {
       paymentType: {
         type: DataTypes.STRING,
         defaultValue: "transfer",
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       deliveryType: {
         type: DataTypes.STRING,
+        allowNull: false,
+        validate: {
+          notEmpty: true,
+        },
       },
       recipientName: {
         type: DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       recipientPhoneNumber: {
         type: DataTypes.STRING,
+        allowNull: false,
         validate: {
           notEmpty: true,
         },
@@ -32,15 +42,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       deliveryDistrict: {
         type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
-        },
       },
       deliveryCity: {
         type: DataTypes.STRING,
-        validate: {
-          notEmpty: true,
-        },
       },
       deliveryPostCode: {
         type: DataTypes.STRING,

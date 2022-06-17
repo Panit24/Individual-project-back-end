@@ -2,7 +2,7 @@ const createError = require("../utils/createError");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const { User } = require("../models");
+const { User, Admin } = require("../models");
 
 const genToken = (payload) =>
   jwt.sign(payload, process.env.JWT_SECRET_KEY, {
@@ -19,28 +19,52 @@ exports.login = async (req, res, next) => {
       createError("password is required", 400);
     }
 
-    const hashedRow = await User.findOne({
+    const hashedRowUser = await User.findOne({
       where: {
         username: username,
       },
     });
-
-    if (!hashedRow) {
+    const hashedRowAdmin = await Admin.findOne({
+      where: {
+        username: username,
+      },
+    });
+    if (!hashedRowUser && !hashedRowAdmin) {
       createError("Invalid username or password", 401);
     }
-    hashedPasswordFromDb = hashedRow.password;
-    const result = await bcrypt.compare(password, hashedPasswordFromDb);
-    if (result) {
-      // console.log("password correct");
-      const token = genToken({
-        id: hashedRow.id,
-      });
-      res.status(201).json({
-        message: "log in success.",
-        token: token,
-      });
-    } else {
-      createError("Invalid username or password", 401);
+    if (hashedRowUser) {
+      hashedPasswordFromDb = hashedRowUser.password;
+      const result = await bcrypt.compare(password, hashedPasswordFromDb);
+      if (result) {
+        // console.log("password correct");
+        const token = genToken({
+          id: hashedRowUser.id,
+        });
+        res.status(201).json({
+          message: "log in success.",
+          token: token,
+          role: "user",
+        });
+      } else {
+        createError("Invalid username or password", 401);
+      }
+    }
+    if (hashedRowAdmin) {
+      hashedPasswordFromDb = hashedRowAdmin.password;
+      const result = await bcrypt.compare(password, hashedPasswordFromDb);
+      if (result) {
+        // console.log("password correct");
+        const token = genToken({
+          id: hashedRowAdmin.id,
+        });
+        res.status(201).json({
+          message: "log in success.",
+          token: token,
+          role: "admin",
+        });
+      } else {
+        createError("Invalid username or password", 401);
+      }
     }
   } catch (err) {
     next(err);

@@ -12,6 +12,7 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
         unitPrice,
         productCode,
         amount,
+        unitWeightKg,
         categoryId,
         description,
         id,

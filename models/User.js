@@ -15,11 +15,9 @@ module.exports = (sequelize, DataTypes) => {
       },
       address: {
         type: DataTypes.TEXT,
-        allowNull: false,
       },
       taxId: {
         type: DataTypes.STRING,
-        unique: true,
       },
       phoneNumber: {
         type: DataTypes.STRING,

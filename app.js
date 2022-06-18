@@ -10,6 +10,7 @@ const productRouter = require("./routes/productRoute");
 const adminAuthRouter = require("./routes/adminAuthRoute");
 const cartProductRouter = require("./routes/cartProductRoute");
 const saleOrderRouter = require("./routes/saleOrderRoute");
+const adminRouter = require("./routes/adminRoute");
 
 const notFoundMiddleware = require("./middleware/notFound");
 const errorMiddleware = require("./middleware/error");
@@ -27,6 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use("/authAdmin", adminAuthRouter);
 app.use("/auth", authRouter);
 app.use("/users", authenticate, userRouter);
+app.use("/admins", authenticateAdmin, adminRouter);
 app.use("/admin_products", authenticateAdmin, productAdminRouter);
 app.use("/products", productRouter);
 app.use("/cart_products", authenticate, cartProductRouter);

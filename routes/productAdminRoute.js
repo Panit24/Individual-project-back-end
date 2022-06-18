@@ -7,9 +7,9 @@ router.post(
   upload.single("image"),
   productAdminController.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId
 );
-router.delete("/:productId", productAdminController.deleteProduct);
+router.delete("/del/:productId", productAdminController.deleteProduct);
 router.patch(
-  "/:productId",
+  "/update/:productId",
   upload.single("image"),
   productAdminController.updateProduct
 );

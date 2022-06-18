@@ -16,9 +16,9 @@ module.exports = async (req, res, next) => {
       where: { id: payload.id },
       attributes: { exclude: ["password"] },
     });
-    // console.log(user);
+    console.log(admin);
     if (!admin) {
-      createError("you are unauthorized");
+      createError("you are unauthorized", 401);
     }
     req.admin = admin;
     next();

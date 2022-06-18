@@ -4,7 +4,6 @@ module.exports = (sequelize, DataTypes) => {
     {
       productCode: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: true,
         validate: {
           notEmpty: true,
@@ -19,20 +18,19 @@ module.exports = (sequelize, DataTypes) => {
       },
       name: {
         type: DataTypes.STRING,
-        unique: true,
         allowNull: false,
         validate: {
           notEmpty: true,
         },
       },
       description: { type: DataTypes.TEXT },
-      unitPrice: { type: DataTypes.DECIMAL(2, 10), allowNull: false },
+      unitPrice: { type: DataTypes.DECIMAL(10, 2), allowNull: false },
       stock: {
         type: DataTypes.FLOAT.UNSIGNED,
         allowNull: false,
       },
-      unitWeightKg: { type: DataTypes.FLOAT, allowNull: true },
-      image: { type: DataTypes.STRING, unique: true },
+      unitWeightKg: { type: DataTypes.FLOAT },
+      image: { type: DataTypes.STRING },
     },
     {
       underscored: true,

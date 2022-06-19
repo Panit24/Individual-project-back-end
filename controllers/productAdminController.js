@@ -126,7 +126,7 @@ exports.updateProduct = async (req, res, next) => {
     }
 
     if (price) {
-      product.price = price;
+      product.unitPrice = price;
     }
 
     await product.save();

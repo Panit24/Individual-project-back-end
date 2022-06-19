@@ -180,3 +180,56 @@ exports.getSaleOrderByUserId = async (req, res, next) => {
     next(err);
   }
 };
+//--------------------------------------------
+exports.getAllSaleOrder = async (req, res, next) => {
+  try {
+    const saleOrders = await SaleOrder.findAll({
+      include: [
+        {
+          model: SaleOrderProduct,
+          attributes: {
+            exclude: ["updatedAt"],
+          },
+          include: [
+            {
+              model: Product,
+              attributes: {
+                exclude: [
+                  "createdAt",
+                  "updatedAt",
+                  "description",
+                  "stock",
+                  "categoryId",
+                  "supplierId",
+                ],
+              },
+            },
+          ],
+        },
+      ],
+    });
+    if (saleOrders.length === 0) {
+      createError("Sale order not found", 400);
+    }
+    res.json({ saleOrders: saleOrders });
+  } catch (err) {
+    next(err);
+  }
+};
+exports.updateDeliveryStatusBySaleOrderId = async (req, res, next) => {
+  try {
+    const { saleOrderId } = req.params;
+    const { deliveryStatus } = req.body;
+    const saleOrder = await SaleOrder.findOne({ where: { id: saleOrderId } });
+    if (!saleOrder) {
+      createError("sale order not found", 400);
+    }
+    if (deliveryStatus) {
+      saleOrder.deliveryStatus = deliveryStatus;
+    }
+    await saleOrder.save();
+    res.json({ updatedSaleOrder: saleOrder });
+  } catch (err) {
+    next(err);
+  }
+};

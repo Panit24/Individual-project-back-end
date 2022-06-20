@@ -39,6 +39,7 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
             where: { productCode: el.productCode },
           });
           //ถ้ามีของเก่าก็ update
+
           if (product) {
             product.stock = product.stock + el.amount;
             product.unitPrice = el.unitPrice;

@@ -22,16 +22,16 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
       // console.log(products);
 
       let productsObj = { products: JSON.parse(products) };
-
       console.log(productsObj);
       // if (req.file) {
       // if (!req.file && !name) {
       //   createError(" Image or product name is required", 400);
       // }
       let image;
-      const result = await cloudinary.upload(req.file.path);
-      image = result.secure_url;
-
+      if (req.file) {
+        const result = await cloudinary.upload(req.file.path);
+        image = result.secure_url;
+      }
       if (productsObj.products) {
         const promise = productsObj.products.map(async (el) => {
           //หาว่ามีของเก่าไหม
@@ -57,7 +57,7 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
                 productCode: el.productCode,
                 stock: el.amount,
                 categoryId: el.categoryId,
-                image: image,
+                image: image || null,
               },
               { transaction: t }
             );

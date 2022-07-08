@@ -1,7 +1,7 @@
-const fs = require("fs");
-const cloudinary = require("../utils/cloudinary");
-const createError = require("../utils/createError");
-const { Product, sequelize } = require("../models");
+const fs = require('fs');
+const cloudinary = require('../utils/cloudinary');
+const createError = require('../utils/createError');
+const { Product, sequelize } = require('../models');
 
 exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId =
   async (req, res, next) => {
@@ -41,7 +41,7 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
           //ถ้ามีของเก่าก็ update
 
           if (product) {
-            product.stock = product.stock + el.amount;
+            product.stock = +product.stock + +el.amount;
             product.unitPrice = el.unitPrice;
             product.name = el.name;
             await product.save({ transaction: t });
@@ -70,7 +70,7 @@ exports.addNewProduct_UpdateStockAndPriceOfOldProduct_ByProductCodeAndProductId 
       //--------------------------------------------------------
       //--------------------------------------------------------
       await t.commit();
-      res.json({ message: "เพิ่มสินค้าสำเร็จ" });
+      res.json({ message: 'เพิ่มสินค้าสำเร็จ' });
       //----------------------------------------------------------
     } catch (err) {
       await t.rollback();
@@ -92,12 +92,12 @@ exports.deleteProduct = async (req, res, next) => {
       },
     });
     if (!product) {
-      createError("product not found", 400);
+      createError('product not found', 400);
     }
     await Product.destroy({ where: { id: productId } }, { transaction: t });
     if (product.image) {
-      const splited = product.image.split("/");
-      const publicId = splited[splited.length - 1].split(".")[0];
+      const splited = product.image.split('/');
+      const publicId = splited[splited.length - 1].split('.')[0];
       await cloudinary.destroy(publicId);
     }
     await Product.destroy({ where: { id: productId } }, { transaction: t });
@@ -114,12 +114,12 @@ exports.updateProduct = async (req, res, next) => {
     const { price } = req.body;
     const product = await Product.findOne({ where: { id: productId } });
     if (!product) {
-      createError("product not found", 400);
+      createError('product not found', 400);
     }
     if (req.file) {
       if (product.image) {
-        const splited = product.image.split("/");
-        const publicId = splited[splited.length - 1].split(".")[0];
+        const splited = product.image.split('/');
+        const publicId = splited[splited.length - 1].split('.')[0];
         await cloudinary.destroy(publicId);
       }
       const result = await cloudinary.upload(req.file.path);
